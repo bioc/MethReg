@@ -6,6 +6,7 @@ readRemap2022 <- function(cell_line){
   url <- "https://remap.univ-amu.fr/storage/remap2022/hg38/MACS2/remap2022_nr_macs2_hg38_v1_0.bed.gz"
   file <- paste0("readRemap2022/",basename(file))
   if(!file.exists(file)){
+    check_package("downloader")
     dir.create(dirname(file),showWarnings = FALSE,recursive = TRUE)
     downloader::download.file(url, file)
   }
@@ -13,6 +14,7 @@ readRemap2022 <- function(cell_line){
   remapCatalog$cell_lines <- gsub("^[[:alnum:]]*:","",gsub("-|,","",remapCatalog$id))
   remapCatalog$id <- gsub(":[[:alnum:]]*$","",gsub("-|,","",remapCatalog$id))
   if(!missing(cell_line)){
+    check_package("openxlsx")
     metadata <- openxlsx::read.xlsx(
       "https://remap.univ-amu.fr/storage/remap2022/biotypes/remap2022_hsap_biotypes.xlsx"
     )
@@ -68,6 +70,7 @@ bedToGranges <- function (path) {
 }
 
 bedImport <- function (path) {
+  check_package("data.table")
   regions <- as.data.frame(
     data.table::fread(
       path, 
